@@ -1,54 +1,52 @@
+We should look at the buggy.c
+
 Reference: https://www.youtube.com/watch?v=Dq8l1_-QgAc&ab_channel=LowLevelLearning
 
-# Compile the code in c, with no debug inforrmation
-To compile our c file:
+# Compile the code in c: with no debug inforrmation
+To compile our c file (-s stands for stripped):
 ```
-gcc -o c_debugging c_debugging.c -s
-```
-Here, we better to use the following, if our root directory is CUDA fo;der:
-```
-gcc -o c_debugging ./02_cuda-intro-main/c_debugging.c -s
+gcc -o buggy_comp_out buggy.c -s
 ```
 
 To see the complied file, in linux:
 ```
-file c_debugging
+file buggy_comp_out
 ```
 
 To get the size of this compile file (we will see it is only 6-7 k-bite):
 ```
-wc -c c_debugging
+wc -c buggy_comp_out
 ```
 
 Now, we can not run the gdb on it as is, and see the source code on it:
 ```
-gdb ./c_debugging    
+gdb ./buggy_comp_out    
 ```
 ===> and then (lay means layout here)
 ```
 lay next
 ```
 
-# Compile the code in c, with debug inforrmation
+# Compile the code in c: with debug inforrmation
 To get the debug infromation into the comiled file, we need to add additional tag into it, and that is instead of -s, we should use tag 
 ```
-gcc -o c_debugging c_debugging.c -g
+gcc -o buggy_comp_out buggy.c -g
 ```
 
 Now, if we look at the compiled file, and run the followig, if we read the output carefully we see the "with debug info".
 ```
-file c_debugging
+file buggy_comp_out
 ```
 
 With debug information, our compiled file is little bigger than without debug-infomration (section 1 above):
 ```
-wc -c c_debugging
+wc -c buggy_comp_out
 ```
 
 ## debugging:
 Now that we put the debug information, we can not run the gdb on it as is, and see the source code on it:
 ```
-gdb ./c_debugging    
+gdb ./buggy_comp_out    
 ```
 ===> and then (lay means layout here)
 ```

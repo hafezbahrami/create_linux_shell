@@ -5,9 +5,7 @@ __pycache__
 *.exe
 *.out
 
-add
-dynamic_alloc_in_c
-c_debugging
+buggy_comp_out
 
 # Environments
 env/
