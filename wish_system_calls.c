@@ -12,6 +12,7 @@ int main() {
     // // create new process
     // printf("Hello: \n");
 
+
     // case 2: Caring the return type of fork() method
 
     int rc = fork(); // at this point child processor is created, and OS runs the rest of the code for both branches

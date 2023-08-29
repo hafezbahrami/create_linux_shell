@@ -1,8 +1,10 @@
+ctrl+shit+v for compiled .md file
 Reference: https://www.youtube.com/watch?v=Dq8l1_-QgAc&ab_channel=LowLevelLearning
 
 # Summary
 Here we want to create our own shell. We will explore a couple of important system-calls, such as fork(), wait(), execv().
-We will explore, when we write "ls -l -a" in command line, how does it get run.
+We will explore, when we write "ls -l -a" in command line, how does it get run. We will figure it out that "ls" is actually a c progmra
+located in "/bin/ls" and we basically run this c-program.
 
 # Linux shell commands
 
@@ -38,7 +40,7 @@ fork() in uor c program, but do not know how, then the help is at:
 man fork
 ```
 
-# the wish.c
+# Building a min-shell: wish_system_calls.c
 
 ## fork()
 fork() creates a copy of the current process (parent), sa a child processor. And then, runs the
@@ -56,7 +58,7 @@ int main() {
 
 We can compile this code:
 ```
-gcc -o wish ./03_c_codes_traning/wish.c -Wall
+gcc -o wish wish_system_calls.c -Wall
 ```
 
 We can run the compiled file by:
@@ -89,7 +91,7 @@ int main() {
 
 Now, we cann compile and run the compiled file. We sould know, there is no order which one (parent or child) gets called first.
 
-In Linu, processors have id, and we can get it by:
+In Linux, processors have id, and we can get it by:
 ```
 (int) getpid()
 ```
@@ -110,7 +112,7 @@ Adding this wait, makes our code more determinsitic, and running it multiple tim
 
 ## execv()
 
-In the child processor section:
+In the child processor section (strdup ==> string-duplication):
 ```
         char* cmd_argv[10];
         cmd_argv[0] = strdup("/bin/ls");
@@ -121,7 +123,7 @@ In the child processor section:
 ```
 
 When the os hits the line that we have "execv(XXX)", it goes to the Kernel, and Kernel says you were running
-wish_system_calls, so far. But now I am switching to ls program stored in "/bin/ls", and create a new heap and new stack,
+wish_system_calls.c, so far. But now I am switching to ls program stored in "/bin/ls", and create a new heap and new stack,
 and jump into the main of that program ls.
 We basically, killing the shell and creating new program ls to run.
 
