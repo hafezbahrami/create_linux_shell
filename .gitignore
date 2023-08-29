@@ -5,7 +5,13 @@ __pycache__
 *.exe
 *.out
 
+./make/*.o
+./make/*.out
+
 buggy_comp_out
+
+final_compiled
+final
 
 # Environments
 env/

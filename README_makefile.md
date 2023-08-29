@@ -1,141 +1,121 @@
 ctrl+shit+v for compiled .md file
 Reference: https://www.youtube.com/watch?v=Dq8l1_-QgAc&ab_channel=LowLevelLearning
 
+Also a good source for Virtualization course:
+https://web.stanford.edu/class/archive/cs/cs107/cs107.1174/guide_make.html
+
+
 # Summary
 Here we want to create our own shell. We will explore a couple of important system-calls, such as fork(), wait(), execv().
 We will explore, when we write "ls -l -a" in command line, how does it get run. We will figure it out that "ls" is actually a c progmra
 located in "/bin/ls" and we basically run this c-program.
 
-# Linux shell commands
+Note: Makefile is super sensitive to the white spaces and tab spaces. Below is a good read, on how to use vim to spot the spaces:
+https://itslinuxfoss.com/fix-makefile-missing-separator/#:~:text=To%20fix%20the%20error%20Makefile,mistake%20can%20cause%20this%20error.
 
-## ls (for listing)
 
-ls is a program that we run in the shell it will gets run. Normally it outputs inthe shell. However,
-we can output it in a txt file and then cat it to see what it is inside
-```
-ls > output.txt
-cat output.txt
-```
+# makefile
 
-## pipe:
-It is when the output of one program wantsto go to the input of another program.
+## make folder
 
-Example: Let's see how we can count the # of items out of a "ls" command.
-```
-ls > output.txt
-wc -l output.txt
-```
-"wc -l" means ==> WordCount Lines.
-
-Bu instead of two lines of codes above, we can pipe the output of first command into the WordCount program:
-```
-ls | wc -l
-```
-
-## man page
-If we have trouble with one command in shell, or c, we can man page that. For instance we want to use 
-fork() in uor c program, but do not know how, then the help is at:
+I have created some dummy *.c files and one dummy header.h. Now, I can build all 3-4 files into one gcc command:
 
 ```
-man fork
+    gcc ./make/main.c ./make/add.c ./make/hello.c ./make/header.h -o final_compiled
+    ./final_compiled
 ```
 
-# Building a min-shell: wish_system_calls.c
+Now, what if we have 100 files to be compiled. Naming them all in one gcc command will be tedious.
 
-## fork()
-fork() creates a copy of the current process (parent), sa a child processor. And then, runs the
-code for both processors. The code is:
-```
-int main() {   
-    (void) fork();
+For the rest of this, let's move the root directory to the make folder.
 
-    // create new process
-    printf("Hello: \n");
-    
-    return 0;
-}
-```
-
-We can compile this code:
-```
-gcc -o wish wish_system_calls.c -Wall
-```
-
-We can run the compiled file by:
-```
-./wish
-```
-
-We see the hello twice, meaning both processors (created by fork(), one parent and one child) will be called.
-We can change it if we change the output file of fork() method:
+### makefile method 1
+The simplest way is the target is noted as final_compiled.
 
 ```
-int main() {
-    int rc = fork();
-    // create new process
-    printf("Hello: \n");
-    if (rc == 0){
-        // we are in child process
-        printf("I am the child process: \n");
-    } else if (rc >0){
-        //we are in the parent process
-        printf("I am the parent process: \n");
-
-    } else{
-        // failure
-    }
-    
-    return 0;
-}
+final_compiled:
+	gcc main.c add.c hello.c -o final_compiled
 ```
 
-Now, we cann compile and run the compiled file. We sould know, there is no order which one (parent or child) gets called first.
-
-In Linux, processors have id, and we can get it by:
+now in the command line, we just need to run the following to create the final_compiled binaries. We could mention the target name
+after the make in the command line.
 ```
-(int) getpid()
-```
-
-## wait()
-We can make the parent processor wait till the child gets finished, and then parent gets started.
-
-Actually this waiting is very common. For instance, in a shell, if we type ls and right after gcc ..., gcc should wait till 
-the ls is done.
-
-The command line we need to add in our c program, in the parent section is: Let's say, at this point we do not care about the
-return value, alos Null as whatever child-ifo that could be passed into the parent.
-```
-(void) wait(NULL)
+make
 ```
 
-Adding this wait, makes our code more determinsitic, and running it multiple times, we get the same results.
-
-## execv()
-
-In the child processor section (strdup ==> string-duplication):
+We then can simply:
 ```
-        char* cmd_argv[10];
-        cmd_argv[0] = strdup("/bin/ls");
-        cmd_argv[1] = strdup("-l");
-        cmd_argv[2] = NULL; // NULL is the way to say the array ended, since we id not specify  the size of the array
-
-        execv(cmd_argv[0], cmd_argv)
+./final_compiled
 ```
 
-When the os hits the line that we have "execv(XXX)", it goes to the Kernel, and Kernel says you were running
-wish_system_calls.c, so far. But now I am switching to ls program stored in "/bin/ls", and create a new heap and new stack,
-and jump into the main of that program ls.
-We basically, killing the shell and creating new program ls to run.
+### makefile method 2
+We here define two targets: (1) final_compiled, nd (2) Clean.
+We first define a variable by: $(CC) = gcc, then we use this variable wherever we want.
 
-If the execv() is successful, it never returns, and will be stuck in the ls program.
+The "Clean" target, wants to remove: (1) all *.o files, and (2) our executable final_compiled
 
-Instead of calling the "/bin/ls" program, we could have called any program. Even, a c program that we wrote ourselves. 
-
-## pipe and rediction
-We can also write the pipe and redirection that we normally do in command line.
-
-First, let's close the file output to the screen, and create a new Write_only file (named: output.txt)
 ```
-    (void) close(STDOUT_FILENO); // no longer can print into screen
-    open("output.txt", O_WRONGLY | O_CREATE | O_TRANC);
+$(CC) = gcc
+final_compiled_target:
+	$(CC) main.c add.c hello.c -o final_compiled
+
+Clean_target:
+	rm *.o final_compiled
+```
+
+Now, let's run this make file, which includes two Targets. If we run 1st target, it will do all the builds and 
+compiling command, but not the second target which is for cleaning:
+```
+make final_compiled_target
+```
+
+To clean it
+```
+make Clean_target
+```
+
+### makefile method 3: Multiple Targets
+Now make a main target that depends some other targets to get build. Therefore, first the child targets will get build, and finall the 
+main target.
+
+```
+$(CC) = gcc
+main_target: target1 target2 target3
+	$(CC) main.o add.o hello.o -o final_compiled
+
+target1: main.c header.h
+	$(CC) -c main.c
+
+target2: hello.c header.h
+	$(CC) -c hello.c
+
+target3: add.c header.h
+	$(CC) -c add.c
+
+Clean_target:
+	rm *.o final_compiled
+```
+
+The main build happens by:
+```
+make main_target
+```
+
+Then, to clean all the *.o files:
+```
+make Clean_target
+```
+
+### makefile method 4: Multiple Targets
+Here we follow the standard explained by the Virtualization course, and more macros.
+
+To run the make file (this will not run the clean target part):
+
+```
+make
+```
+
+And, to clean:
+```
+make clean
 ```
