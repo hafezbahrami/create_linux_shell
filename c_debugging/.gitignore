@@ -1,0 +1,18 @@
+# Pycharm
+.idea/
+__pycache__
+.vscode
+*.exe
+*.out
+
+*.o
+
+disassem*
+buggy_comp_out
+
+final_compiled
+final
+
+# Environments
+env/
+venv/
