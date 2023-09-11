@@ -8,6 +8,8 @@ __pycache__
 *.o
 
 disassem*
+test*
+
 buggy_comp_out
 
 final_compiled

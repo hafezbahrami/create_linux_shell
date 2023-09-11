@@ -132,6 +132,9 @@ we get a bunch of debug information inthe command line:
 (gdb) bt   (or bt full) ==> shows the backtrace or the call stack that we have in VScode UI 
 
 (gdb) x/5i $pc          ==> $pc is allias for $rip  [(gdb) x/5i $rip ], the pointer/register for instruction  ==> so, basically we extract (x) next 5 instructions (i) 
+(gdb) x/32x $rsp        ==> show 32 memory-location, right after wherever rsp register address is in the memory.  ==> the "x" after 32, means show the memory address in hexa-decimal
+(gdb) x/32  $rsp        ==> [identical to x/32i  $rsp]  ==> show 32 next instructions and the memory address
+
 
 (gdb) disasseble        ==> gives all the assebly code/instruction within this code. Part of which (just 5 lines) will be obvious by "(gdb) x/5i $pc"
                         ==> This is exactly what we got in previous section by "objdunp -D ...."
