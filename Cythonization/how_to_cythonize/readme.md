@@ -1,5 +1,5 @@
 # Various References for Cythonization
-[main reference](https://waterprogramming.wordpress.com/2022/06/29/cythonizing-your-python-code-part-1-the-basics/)
+[Main Reference](https://waterprogramming.wordpress.com/2022/06/29/cythonizing-your-python-code-part-1-the-basics/)
 
 
 ## 1 various files in this project
@@ -31,8 +31,15 @@ memory for an int can not contain the largness of the result. For this, we need 
 
 
 
-## 2 how to create a .c file from a py file
+## 3 how to create a .c file from a py file
 We can use Cython package for create a *.c file out of *.py file. Then using the GCC package to create an executable for this *.c file, like we do in other 
 low level langiages. This *.exe file can be executed as usual.
 
 [Reference](https://stackoverflow.com/questions/5105482/compile-main-python-program-using-cython)
+
+## 4 practical way of improving python performance
+Numpy, Pandaa, Torch, .. and many othere libaries they are written in C, and then wrapped by Python code. As an example, in torch we specify the dtype to statically
+type a variable. So, if we can use these libraries
+to the extend possible rather than nusing the dynamically-typed variables in python such as list, dictionaries, ....
+
+[Reference](https://waterprogramming.wordpress.com/2022/08/05/cythonizing-your-python-code-part-2-next-steps-with-reservoir-simulation/)
