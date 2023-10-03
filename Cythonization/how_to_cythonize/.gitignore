@@ -1,0 +1,15 @@
+# Pycharm
+.idea/
+__pycache__
+.vscode
+*.exe
+*.out
+*.so
+*.c
+*.html
+
+build/
+
+# Environments
+env/
+venv/
