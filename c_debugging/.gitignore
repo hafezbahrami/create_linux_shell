@@ -15,6 +15,9 @@ buggy_comp_out
 final_compiled
 final
 
+elf_exploring.i
+elf_exploring.s
+
 # Environments
 env/
 venv/

@@ -3,6 +3,7 @@ We should look at the buggy.c
 
 Reference: https://www.youtube.com/watch?v=Dq8l1_-QgAc&ab_channel=LowLevelLearning
 
+
 # 0 Basic VIM
 
 ```
